@@ -54,7 +54,7 @@ class wsController {
   /**
     * all led on, depends on the input of hex color
     */
-   brightnessAll(color) {
+  brightnessAll(color) {
     for(var i = 0; i < NUM_LEDS; i++) {
       pixelData[i] = color;
     }
@@ -63,12 +63,10 @@ class wsController {
   }
 
   brightnessOne(pos, color){
+    //console.log(pos);
+    //console.log(color);
     let ledPos = pos - 1;
     pixelData[ledPos] = color;
-    // for(var i = 0; i < NUM_LEDS/4; i++) {
-    //   pixelData[i] = color;
-    //   console.log(`number: ${i}, color: ${color}`);
-    // }
     ws281x.render(pixelData);
   }
 

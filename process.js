@@ -1,9 +1,9 @@
 const btnManager = require("./btnManager");
 const wsController = require("./wsController");
 //// !! initial  for use wsController
-let ledController = new wsController();
+// let ledController = new wsController();
 //let ledController = wsController;
-ledController.init();
+// ledController.init();
 //// !! initial  for use btnManager
 btnManager.init();
 //// udp
@@ -14,11 +14,8 @@ var clientPORT = 3040; //// watchout production's port is 3040
 var clientHOST = "10.1.8.239"; //watchout's ip 10.1.8.239 ////
 
 let currentTime = 0; //// set default current time
-let scene5_count_mode = 0; //// if 0 then btn do nothing
-let scene_5_btn_count = "compete"; //// if "compete" then go to trigger watchout's video (indicator)
-let area_win = 0; //// area to win
 
-let scene2_count_mode = 0;
+let scene_btnMode; //// for change btn count mode
 
 
 const delay = (interval) => {
@@ -28,196 +25,184 @@ const delay = (interval) => {
 };
 
 /*                              */
-/** main timer counting by secs */
+/** scene timer counting by secs */
 /*                              */
-
-// timer counting secs then do something
-let scene5 = {
-  1: {
-    action: async () => {
-      console.log("Q51");
-      //// call btn - no action
-      scene5_count_mode = 0;
-      //// call btn color - 4 color in 4 areas, 1 color for 6 btn.
-      ledController.brightness("0xff0000", "0x00ff00", "0x0000ff", "0xffffff");
-      //// call audio - none
-
-      //// call led stripe - ??
-
-      //// call watchout video cue - Q51.
-      sendWatchout("run s5");
-      //// call watchout audio cue - Q51.
-    },
-  },
-
-  6: {
-    action: async () => {
-      console.log("Q51_5");
-      //// call btn - count btn in each areas, pressed 10 times and return, pressed 100 times and return
-      scene5_count_mode = 1;
-      //// call btn color - 4 color in 4 areas, 1 color for 6 btn.
-      
-      //// call audio - play 1 audio file, when btn in 1 of 4 area, pressed 100 times.
-
-      //// call led stripe - ??
-
-      //// call watchout video cue - play 1 of 4 cues, Q52-A, Q52-B, Q52-C, Q52-D.
-
-      //// call watchout audio cue - none.
-    },
-  },
-
-  31: {
-    action: async () => {
-      console.log("Q52");
-      //// call btn - no action
-      scene5_count_mode = 0;
-      //// call btn color - 1 color in all areas, 1 color for 24 btn.
-      //// call watchout video cue - play 1 of 4 cues, Q52-A, Q52-B, Q52-C, Q52-D.
-      ledController.reset();
-      w = area_win;
-      console.log(`area win: ${w}`);
-      switch (w) {
-        case 0: //// if no one win, then play this.
-          sendWatchout("run end2");
-          break;
-        case 1: //// area1 (red) win
-          // ledController.reset();
-          ledController.init(); //// !! remember to call b4 ledController'f function
-          ledController.brightness("0xff0000", "0xff0000", "0xff0000", "0xff0000");
-          console.log(" area 1 win");
-          sendWatchout("run end1");
-          break;
-        case 2: //// area2 (green) win
-          // ledController.reset();
-          ledController.init(); //// !! remember to call b4 ledController'f function
-          ledController.brightness("0x00ff00", "0x00ff00", "0x00ff00", "0x00ff00");
-          console.log(" area 2 win");
-          sendWatchout("run end2");
-          break;
-        case 3: //// area3 (blue) win
-          ledController.init(); //// !! remember to call b4 ledController'f function
-          ledController.brightness("0x0000ff", "0x0000ff", "0x0000ff", "0x0000ff");
-          console.log(" area 3 win");
-          sendWatchout("run end3");
-          break;
-        case 4: //// area4 (white) win
-          ledController.init(); //// !! remember to call b4 ledController'f function
-          ledController.brightness("0xffffff", "0xffffff", "0xffffff", "0xffffff");
-          console.log(" area 4 win");
-          sendWatchout("run end4");
-          break;
-      }
-      //// call audio - play 1 of 4 audio files.
-
-      //// call led stripe - ??
-
-      //// call watchout audio cue - none.
-    },
-  },
-
-  51: {
-    action: async () => {
-      console.log("Q53");
-      //// call btn - no action.
-      scene5_count_mode = 0;
-      //// call btn color - 1 color(white) in all areas, and flash.
-      //ledController.init();
-      ledController.reset();
-      //// call audio - play 1 audio file(號角喇叭聲).
-      //// call led stripe - ??
-      //// call watchout video cue - Q53.
-      //// call watchout audio cue - Q53.
-    },
-  },
-
-  60: {
-    action: async () => {
-      //// kill all
-      scene5_count_mode = 0;
-    },
-  },
-};
 
 let scene2 = {
   1: {
     action: async () => {
-      console.log("S2Q20");
-      //// call btn - no action
-      scene2_count_mode = 1;
-      //// call btn color - 4 color in 4 areas, 1 color for 6 btn.
-      ledController.brightness("0xff0000", "0xfcdb03", "0xffffff", "0x035afc");
-      //ledController.brightnessOne("0xff0000");
-      //// call audio - none
-
-      //// call led stripe - ??
-
-      //// call watchout video cue - Q51.
-      //sendWatchout("run s5");
-      //// call watchout audio cue - Q51.
-    },
-  },
-  5: {
-    action: async () => {
-      console.log("S2Q20-5");
-      //// call btn - no action
-      //scene2_count_mode = 1;
-      //// call btn color - 4 color in 4 areas, 1 color for 6 btn.
-      //ledController.brightnessOne(5, "0x0000ff");
-      //// call audio - none
-
-      //// call led stripe - ??
-
-      //// call watchout video cue - Q51.
-      //sendWatchout("run s5");
-      //// call watchout audio cue - Q51.
-    },
-  },
-  51:{
-    action: async () => {
       console.log("S2Q21");
       //// call btn - no action
-      //scene5_count_mode = 0;
-      //// call btn color - 4 color in 4 areas, 1 color for 6 btn.
-      ledController.reset();
+      //// call btn color - 4 colors in 4 areas, 1 color for 6 btns.
+      btnManager.s2_default();
       //// call audio - none
 
       //// call led stripe - ??
 
-      //// call watchout video cue - Q51.
+      //// call watchout video cue - S2Q21.
       //sendWatchout("run s5");
-      //// call watchout audio cue - Q51.
+      //// call watchout audio cue - S2Q21.
+    },
+  },
+  6: {
+    action: async () => {
+      console.log("S2Q22");
+      //// call btn - s2 mode
+      //// call btn color - 
+      scene_btnMode = "s2";
+      //// call audio - none
+
+      //// call led stripe - ??
+
+      //// call watchout video cue - S2Q22.
+      //sendWatchout("run s5");
+      //// call watchout audio cue - S2Q22.
+    },
+  },
+  36:{
+    action: async () => {
+      console.log("S2Q23");
+      //// call btn - leave s2 mode
+      scene_btnMode = "s2_end";
+      //// call btn color - 1 color in 4 areas.
+      btnManager.s2_ending();
+      //// call audio - none
+
+      //// call led stripe - ??
+
+      //// call watchout video cue - S2Q23.
+      //sendWatchout("run s5");
+      //// call watchout audio cue - S2Q23.
+    },  
+  },
+  56:{
+    action: async () => {
+      console.log("S2 finished");
+      //// set all led to black.
+      btnManager.scene_reset();
+      //// go to next scene (s3)
     },  
   },
 };
 
-// scene timer counting
+let scene3 = {
+  1: {
+    action: async () => {
+      console.log("S3Q31");
+      //// call btn - no action
+      //// call btn color - 4 colors in 4 areas, 1 color for 6 btns.
+      btnManager.s3_default();
+      //// call audio - none
+
+      //// call led stripe - ??
+
+      //// call watchout video cue - S2Q21.
+      //sendWatchout("run s5");
+      //// call watchout audio cue - S2Q21.
+    },
+  },
+  11: {
+    action: async () => {
+      console.log("S3Q32");
+      //// call btn - s2 mode
+      //// call btn color - 
+      scene_btnMode = "s3";
+      //// call audio - none
+
+      //// call led stripe - ??
+
+      //// call watchout video cue - S2Q22.
+      //sendWatchout("run s5");
+      //// call watchout audio cue - S2Q22.
+    },
+  },
+  41:{
+    action: async () => {
+      console.log("S2Q33");
+      //// call btn - leave s3 mode
+      scene_btnMode = "s3_end";
+      //// call btn color - 1 color in 4 areas.
+      btnManager.s3_ending_q33();
+      //// call audio - none
+
+      //// call led stripe - ??
+
+      //// call watchout video cue - S2Q23.
+      //sendWatchout("run s5");
+      //// call watchout audio cue - S2Q23.
+    },  
+  },
+  51:{
+    action: async () => {
+      console.log("S2Q34");
+      //// call btn - leave s2 mode
+   
+      //// call btn color - 1 color in 4 areas.
+      btnManager.s3_ending_q34();
+      //// call audio - none
+
+      //// call led stripe - ??
+
+      //// call watchout video cue - S2Q23.
+      //sendWatchout("run s5");
+      //// call watchout audio cue - S2Q23.
+    },  
+  },
+  61:{
+    action: async () => {
+      console.log("S2Q35");
+      //// call btn - leave s2 mode
+   
+      //// call btn color - 1 color in 4 areas.
+      btnManager.s3_ending_q35();
+      //// call audio - none
+
+      //// call led stripe - ??
+
+      //// call watchout video cue - S2Q23.
+      //sendWatchout("run s5");
+      //// call watchout audio cue - S2Q23.
+    },  
+  },
+  66:{
+    action: async () => {
+      console.log("S3 finished");
+      //// set all led to black.
+      btnManager.scene_reset();
+      //// go to next scene (s3)
+    },  
+  },
+};
+
+
+/*                                   */
+/** scene timer mode (main timeline) */
+/*                                   */
+
 async function callMode(scene, t) {
   switch (scene) {
-    case "S5":
-      if (!scene5[t]) {
-        return;
-      }
-      scene5[t].action();
-      break;
-    case "S1":
-      break;
     case "S2":
       if (!scene2[t]) {
         return;
       }
       scene2[t].action();
       break;
+    case "S3":
+      if (!scene3[t]) {
+        return;
+      }
+      scene3[t].action();
+      break;
+    case "S5":
+      break;
   }
 }
-
-//// udp trigger timer(1, "S5", 60), timer(1, "S2", 75)
+//// udp trigger timer(1, "S5", 60), timer(1, "S2", 56), timer(1, "S3", 66)
 async function timer(state, scene, totalTime) {
   while (state) {
     await delay(1000);
     currentTime++;
     callMode(scene, currentTime);
-    //console.log(currentTime);
     if (currentTime > totalTime) {
       state = 0;
       console.log(`time up , total:${totalTime}`);
@@ -225,212 +210,621 @@ async function timer(state, scene, totalTime) {
   }
 }
 
-/*                                  */
-/** scene_5 btn counting by pressed */
-/*                                  */
+/*                    */
+/** scene button mode */
+/*                    */
 
-//// count amount of btn pressed then do something
-let area1_countAmount = {
+////4. button event cue (scene based)
+let s2a1_counter = {
+  1: {
+    action: async () => {
+      console.log("s2 area1 1 times");
+      //sendWatchout("run b4-1")
+    },
+  },
+  2: {
+    action: async () => {
+      console.log("s2 area1 2 times");
+    },
+  },
+  3: {
+    action: async () => {
+      console.log("s2 area1 3 times");
+    },
+  },
+  4: {
+    action: async () => {
+      console.log("s2 area1 4 times");
+    },
+  },
+  5: {
+    action: async () => {
+      console.log("s2 area1 5 times");
+    },
+  },
+  6: {
+    action: async () => {
+      console.log("s2 area1 6 times");
+    },
+  },
+  7: {
+    action: async () => {
+      console.log("s2 area1 7 times");
+      //sendWatchout("run b4-1")
+    },
+  },
+  8: {
+    action: async () => {
+      console.log("s2 area1 8 times");
+    },
+  },
+  9: {
+    action: async () => {
+      console.log("s2 area1 9 times");
+    },
+  },
   10: {
     action: async () => {
-      console.log("area1 10 times");
-      sendWatchout("run b1-1")
+      console.log("s2 area1 10 times");
     },
   },
-  20: {
+  11: {
     action: async () => {
-      console.log("area1 20 times");
-      sendWatchout("run b1-2")
+      console.log("s2 area1 11 times");
     },
   },
-  30: {
+  12: {
     action: async () => {
-      console.log("area1 30 times");
-      sendWatchout("run b1-3")
-    },
-  },
-  40: {
-    action: async () => {
-      console.log("area1 40 times");
-      sendWatchout("run b1-4")
-    },
-  },
-  50: {
-    action: async () => {
-      console.log("area1 50 times");
-      sendWatchout("run b1-5")
-    },
-  },
-};
-let area2_countAmount = {
-  10: {
-    action: async () => {
-      console.log("area2 10 times");
-      sendWatchout("run b2-1")
-    },
-  },
-  20: {
-    action: async () => {
-      console.log("area2 20 times");
-      sendWatchout("run b2-2")
-    },
-  },
-  30: {
-    action: async () => {
-      console.log("area2 30 times");
-      sendWatchout("run b2-3")
-    },
-  },
-  40: {
-    action: async () => {
-      console.log("area2 40 times");
-      sendWatchout("run b2-4")
-    },
-  },
-  50: {
-    action: async () => {
-      console.log("area2 50 times");
-      sendWatchout("run b2-5")
+      console.log("s2 area1 12 times");
     },
   },
   
 };
-let area3_countAmount = {
+let s2a2_counter = {
+  1: {
+    action: async () => {
+      console.log("s2 area2 1 times");
+      //sendWatchout("run b4-1")
+    },
+  },
+  2: {
+    action: async () => {
+      console.log("s2 area2 2 times");
+    },
+  },
+  3: {
+    action: async () => {
+      console.log("s2 area2 3 times");
+    },
+  },
+  4: {
+    action: async () => {
+      console.log("s2 area2 4 times");
+    },
+  },
+  5: {
+    action: async () => {
+      console.log("s2 area2 5 times");
+    },
+  },
+  6: {
+    action: async () => {
+      console.log("s2 area2 6 times");
+    },
+  },
+  7: {
+    action: async () => {
+      console.log("s2 area2 7 times");
+      //sendWatchout("run b4-1")
+    },
+  },
+  8: {
+    action: async () => {
+      console.log("s2 area2 8 times");
+    },
+  },
+  9: {
+    action: async () => {
+      console.log("s2 area2 9 times");
+    },
+  },
   10: {
     action: async () => {
-      console.log("area3 10 times");
-      sendWatchout("run b3-1")
+      console.log("s2 area2 10 times");
     },
   },
-  20: {
+  11: {
     action: async () => {
-      console.log("area3 20 times");
-      sendWatchout("run b3-2")
+      console.log("s2 area2 11 times");
     },
   },
-  30: {
+  12: {
     action: async () => {
-      console.log("area3 30 times");
-      sendWatchout("run b3-3")
-    },
-  },
-  40: {
-    action: async () => {
-      console.log("area3 40 times");
-      sendWatchout("run b3-4")
-    },
-  },
-  50: {
-    action: async () => {
-      console.log("area3 50 times");
-      sendWatchout("run b3-5")
+      console.log("s2 area2 12 times");
     },
   },
   
 };
-let area4_countAmount = {
+let s2a3_counter = {
+  1: {
+    action: async () => {
+      console.log("s2 area3 1 times");
+      //sendWatchout("run b4-1")
+    },
+  },
+  2: {
+    action: async () => {
+      console.log("s2 area3 2 times");
+    },
+  },
+  3: {
+    action: async () => {
+      console.log("s2 area3 3 times");
+    },
+  },
+  4: {
+    action: async () => {
+      console.log("s2 area3 4 times");
+    },
+  },
+  5: {
+    action: async () => {
+      console.log("s2 area3 5 times");
+    },
+  },
+  6: {
+    action: async () => {
+      console.log("s2 area3 6 times");
+    },
+  },
+  7: {
+    action: async () => {
+      console.log("s2 area3 7 times");
+      //sendWatchout("run b4-1")
+    },
+  },
+  8: {
+    action: async () => {
+      console.log("s2 area3 8 times");
+    },
+  },
+  9: {
+    action: async () => {
+      console.log("s2 area3 9 times");
+    },
+  },
   10: {
     action: async () => {
-      console.log("area4 10 times");
-      sendWatchout("run b4-1")
+      console.log("s2 area3 10 times");
     },
   },
-  20: {
+  11: {
     action: async () => {
-      console.log("area4 20 times");
-      sendWatchout("run b4-2")
+      console.log("s2 area3 11 times");
     },
   },
-  30: {
+  12: {
     action: async () => {
-      console.log("area4 30 times");
-      sendWatchout("run b4-3")
+      console.log("s2 area3 12 times");
     },
   },
-  40: {
+  
+};
+let s2a4_counter = {
+  1: {
     action: async () => {
-      console.log("area4 40 times");
-      sendWatchout("run b4-4")
+      console.log("s2 area4 1 times");
+      //sendWatchout("run b4-1")
     },
   },
-  50: {
+  2: {
     action: async () => {
-      console.log("area4 50 times");
-      sendWatchout("run b4-5")
+      console.log("s2 area4 2 times");
+    },
+  },
+  3: {
+    action: async () => {
+      console.log("s2 area4 3 times");
+    },
+  },
+  4: {
+    action: async () => {
+      console.log("s2 area4 4 times");
+    },
+  },
+  5: {
+    action: async () => {
+      console.log("s2 area4 5 times");
+    },
+  },
+  6: {
+    action: async () => {
+      console.log("s2 area4 6 times");
+    },
+  },
+  7: {
+    action: async () => {
+      console.log("s2 area4 7 times");
+      //sendWatchout("run b4-1")
+    },
+  },
+  8: {
+    action: async () => {
+      console.log("s2 area4 8 times");
+    },
+  },
+  9: {
+    action: async () => {
+      console.log("s2 area4 9 times");
+    },
+  },
+  10: {
+    action: async () => {
+      console.log("s2 area4 10 times");
+    },
+  },
+  11: {
+    action: async () => {
+      console.log("s2 area4 11 times");
+    },
+  },
+  12: {
+    action: async () => {
+      console.log("s2 area4 12 times");
     },
   },
   
 };
 
-//// s5 pressed count operation
-async function call_btn_counter(area, count) {
-  //// count number for win
-  if (count > 30) {
-    scene_5_btn_count = "win";
-    area_win = area;
+let s3a1_counter = {
+  1: {
+    action: async () => {
+      console.log("s3 area1 1 times");
+      //sendWatchout("run b4-1")
+    },
+  },
+  2: {
+    action: async () => {
+      console.log("s3 area1 2 times");
+    },
+  },
+  3: {
+    action: async () => {
+      console.log("s3 area1 3 times");
+    },
+  },
+  4: {
+    action: async () => {
+      console.log("s3 area1 4 times");
+    },
+  },
+  5: {
+    action: async () => {
+      console.log("s3 area1 5 times");
+    },
+  },
+  6: {
+    action: async () => {
+      console.log("s3 area1 6 times");
+    },
+  },
+  7: {
+    action: async () => {
+      console.log("s3 area1 7 times");
+      //sendWatchout("run b4-1")
+    },
+  },
+  8: {
+    action: async () => {
+      console.log("s3 area1 8 times");
+    },
+  },
+  9: {
+    action: async () => {
+      console.log("s3 area1 9 times");
+    },
+  },
+  10: {
+    action: async () => {
+      console.log("s3 area1 10 times");
+    },
+  },
+  11: {
+    action: async () => {
+      console.log("s3 area1 11 times");
+    },
+  },
+  12: {
+    action: async () => {
+      console.log("s3 area1 12 times");
+    },
+  },
+  
+};
+let s3a2_counter = {
+  1: {
+    action: async () => {
+      console.log("s3 area2 1 times");
+      //sendWatchout("run b4-1")
+    },
+  },
+  2: {
+    action: async () => {
+      console.log("s3 area2 2 times");
+    },
+  },
+  3: {
+    action: async () => {
+      console.log("s3 area2 3 times");
+    },
+  },
+  4: {
+    action: async () => {
+      console.log("s3 area2 4 times");
+    },
+  },
+  5: {
+    action: async () => {
+      console.log("s3 area2 5 times");
+    },
+  },
+  6: {
+    action: async () => {
+      console.log("s3 area2 6 times");
+    },
+  },
+  7: {
+    action: async () => {
+      console.log("s3 area2 7 times");
+      //sendWatchout("run b4-1")
+    },
+  },
+  8: {
+    action: async () => {
+      console.log("s3 area2 8 times");
+    },
+  },
+  9: {
+    action: async () => {
+      console.log("s3 area2 9 times");
+    },
+  },
+  10: {
+    action: async () => {
+      console.log("s3 area2 10 times");
+    },
+  },
+  11: {
+    action: async () => {
+      console.log("s3 area2 11 times");
+    },
+  },
+  12: {
+    action: async () => {
+      console.log("s3 area2 12 times");
+    },
+  },
+  
+};
+let s3a3_counter = {
+  1: {
+    action: async () => {
+      console.log("s3 area3 1 times");
+      //sendWatchout("run b4-1")
+    },
+  },
+  2: {
+    action: async () => {
+      console.log("s3 area3 2 times");
+    },
+  },
+  3: {
+    action: async () => {
+      console.log("s3 area3 3 times");
+    },
+  },
+  4: {
+    action: async () => {
+      console.log("s3 area3 4 times");
+    },
+  },
+  5: {
+    action: async () => {
+      console.log("s3 area3 5 times");
+    },
+  },
+  6: {
+    action: async () => {
+      console.log("s3 area3 6 times");
+    },
+  },
+  7: {
+    action: async () => {
+      console.log("s3 area3 7 times");
+      //sendWatchout("run b4-1")
+    },
+  },
+  8: {
+    action: async () => {
+      console.log("s3 area3 8 times");
+    },
+  },
+  9: {
+    action: async () => {
+      console.log("s3 area3 9 times");
+    },
+  },
+  10: {
+    action: async () => {
+      console.log("s3 area3 10 times");
+    },
+  },
+  11: {
+    action: async () => {
+      console.log("s3 area3 11 times");
+    },
+  },
+  12: {
+    action: async () => {
+      console.log("s3 area3 12 times");
+    },
+  },
+  
+};
+let s3a4_counter = {
+  1: {
+    action: async () => {
+      console.log("s3 area4 1 times");
+      //sendWatchout("run b4-1")
+    },
+  },
+  2: {
+    action: async () => {
+      console.log("s3 area4 2 times");
+    },
+  },
+  3: {
+    action: async () => {
+      console.log("s3 area4 3 times");
+    },
+  },
+  4: {
+    action: async () => {
+      console.log("s3 area4 4 times");
+    },
+  },
+  5: {
+    action: async () => {
+      console.log("s3 area4 5 times");
+    },
+  },
+  6: {
+    action: async () => {
+      console.log("s3 area4 6 times");
+    },
+  },
+  7: {
+    action: async () => {
+      console.log("s3 area4 7 times");
+      //sendWatchout("run b4-1")
+    },
+  },
+  8: {
+    action: async () => {
+      console.log("s3 area4 8 times");
+    },
+  },
+  9: {
+    action: async () => {
+      console.log("s3 area4 9 times");
+    },
+  },
+  10: {
+    action: async () => {
+      console.log("s3 area4 10 times");
+    },
+  },
+  11: {
+    action: async () => {
+      console.log("s3 area4 11 times");
+    },
+  },
+  12: {
+    action: async () => {
+      console.log("s3 area4 12 times");
+    },
+  },
+  
+};
+
+//// 3. using return value to call button event cue (scene based)
+async function s2_btn_cue(counter){
+  let area = counter[0];
+  let area_counter = counter[1];
+  //console.log(`s2_btn_cue - area: ${area}, area_counter: ${area_counter}`);
+  if (area == 1) {
+    if (!s2a1_counter[area_counter]) {
+      return;
+    }
+    s2a1_counter[area_counter].action();
   }
-  switch (scene_5_btn_count) {
-    case "compete":
-      if (area == 1) {
-        if (!area1_countAmount[count]) {
-          return;
-        }
-        area1_countAmount[count].action();
-      }
 
-      if (area == 2) {
-        if (!area2_countAmount[count]) {
-          return;
-        }
-        area2_countAmount[count].action();
-      }
+  if (area == 2) {
+    if (!s2a2_counter[area_counter]) {
+      return;
+    }
+    s2a2_counter[area_counter].action();
+  }
 
-      if (area == 3) {
-        if (!area3_countAmount[count]) {
-          return;
-        }
-        area3_countAmount[count].action();
-      }
+  if (area == 3) {
+    if (!s2a3_counter[area_counter]) {
+      return;
+    }
+    s2a3_counter[area_counter].action();
+  }
 
-      if (area == 4) {
-        if (!area4_countAmount[count]) {
-          return;
-        }
-        area4_countAmount[count].action();
-      }
-
-      break;
-    case "win":
-      console.log("win");
-      break;
+  if (area == 4) {
+    if (!s2a4_counter[area_counter]) {
+      return;
+    }
+    s2a4_counter[area_counter].action();
   }
 }
 
-//// s2 pressed count operation
-async function call_btn_press(area, pos) {
-  //// change led when btn pressed
-  //console.log(`call_btn_press, area: ${area}, pos: ${pos}`);
-  // if (pos == ){
+async function s3_btn_cue(counter){
+  let area = counter[0];
+  let area_counter = counter[1];
+  //console.log(`s2_btn_cue - area: ${area}, area_counter: ${area_counter}`);
+  if (area == 1) {
+    if (!s3a1_counter[area_counter]) {
+      return;
+    }
+    s3a1_counter[area_counter].action();
+  }
 
-  // }
-  ledController.brightnessOne(pos, "0x000000");
-  
+  if (area == 2) {
+    if (!s3a2_counter[area_counter]) {
+      return;
+    }
+    s3a2_counter[area_counter].action();
+  }
+
+  if (area == 3) {
+    if (!s3a3_counter[area_counter]) {
+      return;
+    }
+    s3a3_counter[area_counter].action();
+  }
+
+  if (area == 4) {
+    if (!s3a4_counter[area_counter]) {
+      return;
+    }
+    s3a4_counter[area_counter].action();
+  }
 }
 
-//// 2.pass btn value to "btnManager", and from "btnManager" to "call_btn_counter"
+//// 2.pass btn value (x,y)to "btnManager" to do computation and return value.
 function btnMode(x, y) {
-  if (scene5_count_mode == 1) {
-    let amount = btnManager.btn_count(x, y);
-    console.log(`area: ${x}, amount: ${amount}`);
-    call_btn_counter(x, amount);
-  } else if (scene2_count_mode == 1){
-    let pos = btnManager.btn_pressed(x, y);
-    //let pos_y = btnManager.btn_test(y);
-    //console.log(`area: ${x}, pos: ${pos}`);
-    call_btn_press(x, pos);
+  switch(scene_btnMode){
+    case "s2" :
+      let counter = btnManager.s2_count_mode(x,y);
+      //console.log(`process - counter: ${counter}`);
+      s2_btn_cue(counter)
+      break;
+    case "s2_end" :
+      break; 
+    case "s3" :
+      let counter_s3 = btnManager.s3_count_mode(x,y);
+      //console.log(`process - counter_s3: ${counter_s3}`);
+      s3_btn_cue(counter_s3)
+      break;
+    case "s3_end" :
+      break; 
+    case "s5" :
+      break;         
   }
 }
-
 //// 1.get btn value from app.js to function btnMode
 process.on("message", function (args) {
   // console.log(args);
@@ -439,6 +833,8 @@ process.on("message", function (args) {
   //console.log(`test.js get btn ${x} and ${y}`);
   btnMode(x, y);
 });
+
+
 
 /*             */
 /** udp server */
@@ -457,7 +853,9 @@ server.on("message", function (message, remote) {
   if (message == "S5") {
     timer(1, "S5", 60); //// 3rd value is scene totalTime
   }else if(message == "S2"){
-    timer(1, "S2", 75); //// 3rd value is scene totalTime
+    timer(1, "S2", 56); //// 3rd value is scene totalTime
+  }else if(message == "S3"){
+    timer(1, "S3", 66); //// 3rd value is scene totalTime
   }
 });
 server.bind(serverPORT, serverHOST);
@@ -477,3 +875,5 @@ async function sendWatchout(msg) {
     client.close();
   });
 }
+
+
