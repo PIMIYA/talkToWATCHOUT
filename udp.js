@@ -19,7 +19,7 @@ var clientHOST = '192.168.168.45'; //watchout's ip 192.168.168.45 //// 10.1.8.24
 // server.bind(serverPORT, serverHOST)
 
 // 例子：UDP客戶端
-var message = "S3"; //S5
+var message = "S5"; //S5
 console.log(message);
 var client = dgram.createSocket('udp4');
 client.send(message, clientPORT, clientHOST, function(err, bytes) {

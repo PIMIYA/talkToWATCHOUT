@@ -77,6 +77,22 @@ class Buttons {
         return [firstAreaAmount, secondAreaAmount, thirdAreaAmount, fourthAreaAmount];
     }
 
+    get iniAreaAmount(){
+        let allAreaAmount =0;
+        for(var i=0 ; i <=23; i++){
+            allAreaAmount += this.buttons[i].count;
+        }
+        return allAreaAmount;
+    }
+
+    randomOn() {
+        let randomPos = Math.floor(Math.random()*23);
+        this.buttons[randomPos].color = '0xffff00'; //// yellow
+        this.buttons[randomPos].count = 0;
+        this.buttons[randomPos].ledOn();
+        return randomPos;
+    }
+
     set defaultMode(m){
         if(m == "s2"){
             for(var i=0 ; i <=5; i++){
@@ -120,24 +136,30 @@ class Buttons {
                 this.buttons[i].count = 0;
                 this.buttons[i].ledOn();
             }
+        }else if(m == "s4"){
+            for(var i=0 ; i <=23; i++){
+                this.buttons[i].color = '0x000000'; //// black
+                this.buttons[i].count = 0;
+                this.buttons[i].ledOn();
+            }
         }else if(m == "s5"){
             for(var i=0 ; i <=5; i++){
-                this.buttons[i].color = '0xfcdb03';
+                this.buttons[i].color = '0x00ff00'; //// red
                 this.buttons[i].count = 0;
                 this.buttons[i].ledOn();
             }
             for(var i=6 ; i <=11; i++){
-                this.buttons[i].color = '0xffffff';
+                this.buttons[i].color = '0x0000ff'; //// blue
                 this.buttons[i].count = 0;
                 this.buttons[i].ledOn();
             }
             for(var i=12 ; i <=17; i++){
-                this.buttons[i].color = '0x035afc';
+                this.buttons[i].color = '0xff0000'; //// green
                 this.buttons[i].count = 0;
                 this.buttons[i].ledOn();
             }
             for(var i=18 ; i <=23; i++){
-                this.buttons[i].color = '0xff0000';
+                this.buttons[i].color = '0xffffff'; //// white
                 this.buttons[i].count = 0;
                 this.buttons[i].ledOn();
             }
@@ -169,6 +191,12 @@ class Buttons {
                 this.buttons[i].ledOn();
                 this.buttons[i].count = 0;
             }               
+        } else if(m == "s5"){
+            for(var i=0 ; i <=23; i++){
+                this.buttons[i].color = '0xffffff'; //// white 100%
+                this.buttons[i].ledOn();
+                this.buttons[i].count = 0;
+            } 
         }
     }
 }
