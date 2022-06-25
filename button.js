@@ -9,6 +9,9 @@ let xyPos = [
              '4-6', '4-5', '4-4', '4-3', '4-2', '4-1',
             ];
 
+// let buttonPos_s = [0,3,5,7,8,10,13,15,17,19,21,22];
+// let buttonPos_b = [1,2,4,6,9,11,12,14,16,18,20,23];
+
 
 class Button {
     constructor(pos, color, count = 0, area) {
@@ -136,7 +139,7 @@ class Buttons {
                 this.buttons[i].count = 0;
                 this.buttons[i].ledOn();
             }
-        }else if(m == "s4"){
+        }else if(m == "s0s4s6"){
             for(var i=0 ; i <=23; i++){
                 this.buttons[i].color = '0x000000'; //// black
                 this.buttons[i].count = 0;
@@ -194,6 +197,30 @@ class Buttons {
         } else if(m == "s5"){
             for(var i=0 ; i <=23; i++){
                 this.buttons[i].color = '0xffffff'; //// white 100%
+                this.buttons[i].ledOn();
+                this.buttons[i].count = 0;
+            } 
+        } else if(m == "s5a1"){
+            for(var i=0 ; i <=23; i++){
+                this.buttons[i].color = '0x00ff00'; //// red
+                this.buttons[i].ledOn();
+                this.buttons[i].count = 0;
+            } 
+        } else if(m == "s5a2"){
+            for(var i=0 ; i <=23; i++){
+                this.buttons[i].color = '0x0000ff'; //// blue
+                this.buttons[i].ledOn();
+                this.buttons[i].count = 0;
+            } 
+        } else if(m == "s5a3"){
+            for(var i=0 ; i <=23; i++){
+                this.buttons[i].color = '0xff0000'; //// green
+                this.buttons[i].ledOn();
+                this.buttons[i].count = 0;
+            } 
+        } else if(m == "s5a4"){
+            for(var i=0 ; i <=23; i++){
+                this.buttons[i].color = '0xffffff'; //// white
                 this.buttons[i].ledOn();
                 this.buttons[i].count = 0;
             } 

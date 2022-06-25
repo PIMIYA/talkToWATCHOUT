@@ -10,19 +10,6 @@ let xyPos = [
     '4-6', '4-5', '4-4', '4-3', '4-2', '4-1',
    ];
 
-let tmp_XY = [
-    '1-1', '1-2', '1-3', '1-4', '1-5', '1-6', 
-    '2-6', '2-5', '2-4', '2-3', '2-2', '2-1',
-    '3-1', '3-2', '3-3', '3-4', '3-5', '3-6', 
-    '4-6', '4-5', '4-4', '4-3', '4-2', '4-1',
-   ];
-let rand_max =23;
-let current_xy = "";
-let s4_amount = 1;
-
-let s7_default_xy = [];
-let s7_amount = 0;
-
 const BTN = require('./button');
 let buttons = new BTN.Buttons();
 
@@ -32,12 +19,89 @@ let area2_counter = 0;
 let area3_counter = 0;
 let area4_counter = 0;
 
-let s4_pos = 0;
+////s4 s6 setting
+let tmp_XY = [
+    '1-1', '1-2', '1-3', '1-4', '1-5', '1-6', 
+    '2-6', '2-5', '2-4', '2-3', '2-2', '2-1',
+    '3-1', '3-2', '3-3', '3-4', '3-5', '3-6', 
+    '4-6', '4-5', '4-4', '4-3', '4-2', '4-1',
+   ];
+let rand_max =23;
+let s4_current_xy = "";
+let s6_current_xy = "";
+let s4_amount = 0;
+let s6_amount = 0;
 
-class btnManager {
-    constructor() {
-    }
-  
+//// s7 setting
+let s7_default_xy = [];
+let s7_amount = 0;
+
+let buttonPos_s = [0,3,5,7,8,10,13,15,17,19,21,22];
+let buttonPos_b = [1,2,4,6,9,11,12,14,16,18,20,23];
+
+let bs = false;
+let ss = false;
+
+
+const delay = (interval) => {
+    return new Promise((resolve) => {
+      setTimeout(resolve, interval);
+    });
+  };
+
+
+function flash(bigon, bigoff, smallOn, smallOff){
+    this.MaxIterations = 1000000;
+    this.Enabled = true;    
+    this.condition = true;
+    this.iteration = 0;
+    this.Loop = async function(){
+        if (this.condition 
+            && this.Enabled 
+            && this.iteration++ < this.MaxIterations){
+                console.log(this.iteration);
+                //do things
+                console.log('b: '+ bs);
+                console.log('s: '+ ss);
+                if(bs == false && ss ==false){
+                    await delay(500);
+                    smallOff();
+                    bigon();
+                    await delay(500);
+                    smallOn();
+                    bigoff();
+                }else if(bs == true && ss == false){
+                    await delay(500);
+                    smallOff();
+                    bigoff();
+                    await delay(500);
+                    smallOn();
+                    bigoff();
+                }else if(bs == false && ss == true){
+                    await delay(500);
+                    smallOff();
+                    bigon();
+                    await delay(500);
+                    smallOff();
+                    bigoff();
+                }else if(bs == true && ss == true){
+                    await delay(500);
+                    smallOff();
+                    bigoff();
+                    await delay(500);
+                    smallOff();
+                    bigoff();
+                }
+                setTimeout(this.Loop.bind(this),0);
+            }
+        };  
+        this.Stop = function()
+        {
+            this.Enabled = false;
+        };
+}
+
+class btnManager {  
     init() {
       this.exec_btn();
       for(var i = 0; i<=23; i++){
@@ -60,9 +124,72 @@ class btnManager {
         }
     }
 
-    s2_default() {
-        buttons.defaultMode = "s2";
+    scene_default(s) {
+        buttons.defaultMode = s;
     }
+
+    scene_ending(sq) {
+        buttons.endingMode = sq;
+    }
+
+
+    s0_bigOn(){
+        let bigPos = buttonPos_b;
+        var step;
+        for (step = 0; step < bigPos.length; step++) {
+            buttons.allButtons[bigPos[step]].color = '0xffffff'; //// white
+            buttons.allButtons[bigPos[step]].ledOn();
+        }
+    }
+
+    s0_bigOff(){
+        let bigPos = buttonPos_b;
+        var step;
+        for (step = 0; step < bigPos.length; step++) {
+            buttons.allButtons[bigPos[step]].color = '0x000000'; //// white
+            buttons.allButtons[bigPos[step]].ledOn();
+        }
+    }
+
+
+
+    
+    
+    
+    s0_smallOn(){
+        let smallPos = buttonPos_s;
+        var step;
+        for (step = 0; step < smallPos.length; step++) {
+            buttons.allButtons[smallPos[step]].color = '0xffffff'; //// white
+            buttons.allButtons[smallPos[step]].ledOn();
+        }
+    }
+    
+    s0_smallOff(){
+        let smallPos = buttonPos_s;
+        var step;
+        for (step = 0; step < smallPos.length; step++) {
+            buttons.allButtons[smallPos[step]].color = '0x00000'; //// white
+            buttons.allButtons[smallPos[step]].ledOn();
+        }
+    }
+    
+    s0_flash(time){
+        var f = new flash(this.s0_bigOn, this.s0_bigOff, this.s0_smallOn, this.s0_smallOff);
+        setTimeout(f.Loop.bind(f), 0);
+        setTimeout(f.Stop.bind(f), time);
+    }
+    
+    s0_count_mode(x, y){
+        let pos = this.xyToPos(x, y);
+        if(buttonPos_s.indexOf(pos) != -1){
+            ss = true;
+        }else if(buttonPos_b.indexOf(pos) != -1){
+            bs = true;
+        }
+        console.log(`bigState: ${bs}, smallState: ${ss}`);
+    }
+
     s2_count_mode(x, y) {
         let pos = this.xyToPos(x, y);
         let black = '0x000000';   
@@ -128,14 +255,6 @@ class btnManager {
         } else return [area, 0]     
         //console.log(counter);
         //return [pos, pos_counter, area, area1_counter]
-    }
-
-    s2_ending() {
-        buttons.endingMode = "s2";    
-    }
-
-    s3_default() {
-        buttons.defaultMode = "s3";
     }
 
     s3_count_mode(x, y) {
@@ -205,57 +324,39 @@ class btnManager {
         //return [pos, pos_counter, area, area1_counter]
     }
 
-    s3_ending_q33() {
-        buttons.endingMode = "s3q33";    
-    }
-
-    s3_ending_q34() {
-        buttons.endingMode = "s3q34";    
-    }
-
-    s3_ending_q35() {
-        buttons.endingMode = "s3q35";    
-    }
-
-    s4_default() {
-        buttons.defaultMode = "s4";
-    }
-
     getRandomInt(max) {
         return Math.floor(Math.random() * max);
     }
 
-    s4_rand_call_btn(){
+    s4_rand_call_btn(amount){      
+        //console.log('amount in amount :' + amount);
         let pos = this.getRandomInt(rand_max);
-        buttons.allButtons[pos].color = '0xffff00'; //// yellow
-        buttons.allButtons[pos].ledOn();
-        current_xy = tmp_XY[pos];
+
+        if(amount == 4) {
+            buttons.allButtons[pos].color = '0x000000'; //// black
+            buttons.allButtons[pos].ledOn();
+            this.scene_reset();
+        } else {
+            buttons.allButtons[pos].color = '0xffff00'; //// yellow
+            buttons.allButtons[pos].ledOn();
+            s4_current_xy = tmp_XY[pos];  
+        }               
     }
 
     s4_count_mode(x, y) {
         let xy = x + '-' + y;
-        console.log(s4_amount);
-        if(xy == current_xy){
-            if(s4_amount < 4){
+        if(xy == s4_current_xy){
+            if (s4_amount < 4) {
                 let pos = this.xyToPos(x, y);
                 buttons.allButtons[pos].color = '0x000000'; //// black
                 buttons.allButtons[pos].ledOn();
-                // console.log(xy, current_xy);
-                // console.log(tmp_XY);
-                // console.log('tmp_XY length:' + tmp_XY.length);
-                this.s4_rand_call_btn();
+              
                 s4_amount ++;
+                this.s4_rand_call_btn(s4_amount, pos);
+                //console.log('s4_amount in s4_count_mode :' + s4_amount);
                 return s4_amount;
-            }else if(s4_amount == 4){
-                //console.log('all leds off');
-                this.scene_reset();
             }
         }
-        
-    }
-
-    s5_default() {
-        buttons.defaultMode = "s5";
     }
 
     s5_count_mode(x, y){
@@ -265,29 +366,37 @@ class btnManager {
         //buttons.defaultMode = "s2";
         return [x, buttons.totalAreaAmount];
     }
-    s5_ending() {
-        buttons.endingMode = "s5"; 
+
+    s6_rand_call_btn(amount){      
+        //console.log('amount in amount :' + amount);
+        let pos = this.getRandomInt(rand_max);
+
+        if(amount == 4) {
+            buttons.allButtons[pos].color = '0x000000'; //// black
+            buttons.allButtons[pos].ledOn();
+            this.scene_reset();
+        } else {
+            buttons.allButtons[pos].color = '0xffff00'; //// yellow
+            buttons.allButtons[pos].ledOn();
+            s6_current_xy = tmp_XY[pos];  
+        }               
     }
 
-    s7_count_mode(x, y) {
-        let click_xy = x +'-' + y;
-        console.log('click: ' + click_xy);
-        for (let i = 0; i < s7_default_xy.length; i++) {
-            if(click_xy == s7_default_xy[i]){
-                console.log(s7_default_xy[i]);
-                let xy = s7_default_xy[i].split('-');
-                let pos = this.xyToPos(xy[0], xy[1]);
-                console.log(pos);
+    s6_count_mode(x, y) {
+        let xy = x + '-' + y;
+        if(xy == s6_current_xy){
+            if (s6_amount < 4) {
+                let pos = this.xyToPos(x, y);
                 buttons.allButtons[pos].color = '0x000000'; //// black
                 buttons.allButtons[pos].ledOn();
-                s7_amount --;
-                return s7_amount;
+              
+                s6_amount ++;
+                this.s6_rand_call_btn(s6_amount, pos);
+                //console.log('s6_amount in s6_count_mode :' + s6_amount);
+                return s6_amount;
             }
-
         }
-
     }
-
 
     getRandomlist(r){
         let numbers = [];
@@ -306,26 +415,39 @@ class btnManager {
         return numbers;
     }
 
-
-    s5_area_compete(){
+    s7_count_mode(x, y) {
+        let click_xy = x +'-' + y;
+        //console.log('click: ' + click_xy);
+        for (let i = 0; i < s7_default_xy.length; i++) {
+            if(click_xy == s7_default_xy[i]){
+                //console.log(s7_default_xy[i]);
+                let xy = s7_default_xy[i].split('-');
+                let pos = this.xyToPos(xy[0], xy[1]);
+                //console.log(pos);
+                buttons.allButtons[pos].color = '0x000000'; //// black
+                buttons.allButtons[pos].ledOn();
+                s7_amount --;
+                if(s7_amount == 0) {
+                   let resault = " success 1 time"
+                   return resault;
+                }
+                //return s7_amount;
+            }
+        }
     }
 
     s7_rand_call_btn(n){
         s7_amount = n;
         let pos = this.getRandomlist(n);
-        console.log(pos);
+        //console.log(pos);
         var step;
         for (step = 0; step < n; step++) {
-            buttons.allButtons[pos[step]].color = '0x00ff00'; //// red
+            buttons.allButtons[pos[step]].color = '0xffff00'; //// yellow
             buttons.allButtons[pos[step]].ledOn();
             s7_default_xy.push(xyPos[pos[step]]);
         }
-        console.log(s7_default_xy);
-        
+        //console.log(s7_default_xy);   
     }
-
-
-
 
 
 
@@ -354,9 +476,6 @@ class btnManager {
     //     //console.log(buttons.totalAreaAmount);
     //     return amounts;
     // }
-
-
-
 
     //執行按扭btn.py
     exec_btn() {

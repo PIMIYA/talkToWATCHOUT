@@ -68,6 +68,15 @@ class wsController {
     let ledPos = pos - 1;
     pixelData[ledPos] = color;
     ws281x.render(pixelData);
+
+    // ---- animation-loop
+    // var t0 = Date.now();
+    // setInterval(function () {
+    //   var dt = Date.now() - t0;
+
+    //   ws281x.setBrightness(
+    //     Math.floor(Math.sin(dt/1000) * 128 + 128));
+    // }, 1000 / 30);
   }
 
   /**

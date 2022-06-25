@@ -32,13 +32,95 @@ const delay = (interval) => {
 /** scene timer counting by secs */
 /*                              */
 
+let scene0 = {
+  1: {
+    action: async () => {
+      console.log("S0Q1");
+      //// call btn - no action
+      //btnManager.scene_reset();
+      //// call btn color - big and small flash
+      btnManager.s0_flash(60000);
+      //await delay(3000);
+      //// call audio - none
+
+      //// call led stripe - ??
+
+      //// call watchout video cue - S2Q21.
+      //sendWatchout("run s5");
+      //// call watchout audio cue - S2Q21.
+    },
+  },
+  11: {
+    action: async () => {
+      console.log("S0Q2");
+      //// call btn - no action
+      //btnManager.s0_bigFlash(false);
+      scene_btnMode = "s0";
+      //// call btn color - set all black and count = 0.
+      //btnManager.scene_reset();
+      //// call audio - none
+
+      //// call led stripe - ??
+
+      //// call watchout video cue - S2Q21.
+      //sendWatchout("run s5");
+      //// call watchout audio cue - S2Q21.
+    },
+  },
+  31: {
+    action: async () => {
+      console.log("S0Q3");
+      //// call btn - no action
+      //// call btn color - set all black and count = 0.
+      //btnManager.scene_reset();
+      //// call audio - none
+
+      //// call led stripe - ??
+
+      //// call watchout video cue - S2Q21.
+      //sendWatchout("run s5");
+      //// call watchout audio cue - S2Q21.
+    },
+  },
+  41:{
+    action: async () => {
+      console.log("S0 finished");
+      //// go to next scene (s2)
+    },  
+  },
+};
+
+let scene1 = {
+  1: {
+    action: async () => {
+      console.log("S1Q11");
+      //// call btn - no action
+      //// call btn color - set all black and count = 0.
+      btnManager.scene_reset();
+      //// call audio - none
+
+      //// call led stripe - ??
+
+      //// call watchout video cue - S2Q21.
+      //sendWatchout("run s5");
+      //// call watchout audio cue - S2Q21.
+    },
+  },
+  21:{
+    action: async () => {
+      console.log("S1 finished");
+      //// go to next scene (s2)
+    },  
+  },
+};
+
 let scene2 = {
   1: {
     action: async () => {
       console.log("S2Q21");
       //// call btn - no action
       //// call btn color - 4 colors in 4 areas, 1 color for 6 btns.
-      btnManager.s2_default();
+      btnManager.scene_default("s2");
       //// call audio - none
 
       //// call led stripe - ??
@@ -69,7 +151,7 @@ let scene2 = {
       //// call btn - leave s2 mode
       scene_btnMode = "nothing";
       //// call btn color - 1 color in 4 areas.
-      btnManager.s2_ending();
+      btnManager.scene_ending("s2");
       //// call audio - none
 
       //// call led stripe - ??
@@ -95,7 +177,7 @@ let scene3 = {
       console.log("S3Q31");
       //// call btn - no action
       //// call btn color - 4 colors in 4 areas, 1 color for 6 btns.
-      btnManager.s3_default();
+      btnManager.scene_default("s3");
       //// call audio - none
 
       //// call led stripe - ??
@@ -126,7 +208,7 @@ let scene3 = {
       //// call btn - leave s3 mode
       scene_btnMode = "nothing";
       //// call btn color - 1 color in 4 areas.
-      btnManager.s3_ending_q33();
+      btnManager.scene_ending("s3q33");
       //// call audio - none
 
       //// call led stripe - ??
@@ -142,7 +224,7 @@ let scene3 = {
       //// call btn - leave s2 mode
    
       //// call btn color - 1 color in 4 areas.
-      btnManager.s3_ending_q34();
+      btnManager.scene_ending("s3q34");
       //// call audio - none
 
       //// call led stripe - ??
@@ -158,7 +240,7 @@ let scene3 = {
       //// call btn - leave s2 mode
    
       //// call btn color - 1 color in 4 areas.
-      btnManager.s3_ending_q35();
+      btnManager.scene_ending("s3q35");
       //// call audio - none
 
       //// call led stripe - ??
@@ -184,7 +266,7 @@ let scene4 = {
       console.log("S4Q41");
       //// call btn - no action
       //// call btn color - 1 colors in 4 areas. (black)
-      btnManager.s4_default();
+      //btnManager.scene_reset();
       //// call audio - none
 
       //// call led stripe - ??
@@ -198,7 +280,7 @@ let scene4 = {
     action: async () => {
       console.log("S4Q42");
       //// call btn color - 
-      btnManager.s4_rand_call_btn();
+      btnManager.s4_rand_call_btn(0);
       //// call btn - s4 mode
       scene_btnMode = "s4";
       //// call audio - none
@@ -216,7 +298,7 @@ let scene4 = {
       //// call btn - leave s4 mode
       scene_btnMode = "nothing";
       //// call btn color - 1 color in 4 areas. (black)
-      btnManager.s4_default();
+      btnManager.scene_reset();
       //// call audio - none
 
       //// call led stripe - ??
@@ -230,7 +312,7 @@ let scene4 = {
     action: async () => {
       console.log("S4 finished");
       //// set all led to black.
-      btnManager.scene_reset();
+      //btnManager.scene_reset();
       //// go to next scene (s3)
     },  
   },
@@ -242,7 +324,7 @@ let scene5 = {
       console.log("S5Q51");
       //// call btn - no action
       //// call btn color - 4 colors in 4 areas, 1 color for 6 btns.
-      btnManager.s5_default();
+      btnManager.scene_default("s5");
       //// call audio - none
 
       //// call led stripe - ??
@@ -256,21 +338,17 @@ let scene5 = {
     action: async () => {
       console.log("S5Q51.5");
       //// call btn - s5 mode, start counting.
-     
-      //// call btn color - 
       scene_btnMode = "s5";
       //// call audio - none
 
       //// call led stripe - ??
-
-      //// call watchout video cue - S2Q22.
-      //sendWatchout("run s5");
-      //// call watchout audio cue - S2Q22.
     },
   },
   31:{
     action: async () => {
       console.log("S5Q52");
+      
+      //// call btn color - 1 color in 4 areas. (win color, win video)
       w = area_win;
       console.log(`area win: ${w}`);
       switch (w) {
@@ -278,49 +356,46 @@ let scene5 = {
            //sendWatchout("run end2");
            break;
          case 1: //// area1 (red) win
-           console.log(" area 1 win");
+           console.log(" s5 area 1 win");
+           btnManager.scene_ending("s5a1");
            //sendWatchout("run end1");
            break;
          case 2: //// area2 (green) win
-           console.log(" area 2 win");
+           console.log(" s5 area 2 win");
+           btnManager.scene_ending("s5a2");
            //sendWatchout("run end2");
            break;
          case 3: //// area3 (blue) win
-           console.log(" area 3 win");
+           console.log(" s5 area 3 win");
+           btnManager.scene_ending("s5a3");
            //sendWatchout("run end3");
            break;
          case 4: //// area4 (white) win
-           console.log(" area 4 win");
+           console.log(" s5 area 4 win");
+           btnManager.scene_ending("s5a4");
            //sendWatchout("run end4");
            break;
       }
-      //// call btn - leave s5 mode, run 1 of 4 win vid.
-      //scene_btnMode = "nothing";
-      //// call btn color - 1 color in 4 areas.
-      //btnManager.s2_ending();
+      //// call btn - leave s5 mode,.
+      scene_btnMode = "nothing";
       //// call audio - none
 
       //// call led stripe - ??
-
-      //// call watchout video cue - S2Q23.
-      //sendWatchout("run s5");
-      //// call watchout audio cue - S2Q23.
     },  
   },
   51:{
     action: async () => {
       console.log("S5Q53");
-      //// call btn - leave s5 mode, run ending vid.
-      scene_btnMode = "nothing";
+      //// call btn - 
       //// call btn color - 1 color in 4 areas.
-      btnManager.s5_ending();
+      btnManager.scene_ending("s5");
       //// call audio - none
 
       //// call led stripe - ??
 
-      //// call watchout video cue - S2Q23.
+      //// call watchout video cue - S5Q53.
       //sendWatchout("run s5");
-      //// call watchout audio cue - S2Q23.
+      //// call watchout audio cue - S5Q53.
     },  
   },
   61:{
@@ -333,12 +408,213 @@ let scene5 = {
   },
 };
 
+let scene6 = {
+  1: {
+    action: async () => {
+      console.log("S6Q61");
+      //// call btn - no action
+      //// call btn color - 1 colors in 4 areas. (black)
+      //btnManager.scene_reset();
+      //// call audio - none
+
+      //// call led stripe - ??
+
+      //// call watchout video cue - S2Q21.
+      //sendWatchout("run s5");
+      //// call watchout audio cue - S2Q21.
+    },
+  },
+  6: {
+    action: async () => {
+      console.log("S6Q62");
+      //// call btn color - 
+      btnManager.s6_rand_call_btn(0);
+      //// call btn - s6 mode
+      scene_btnMode = "s6";
+      //// call audio - none
+
+      //// call led stripe - ??
+
+      //// call watchout video cue - S2Q22.
+      //sendWatchout("run s5");
+      //// call watchout audio cue - S2Q22.
+    },
+  },
+  46:{
+    action: async () => {
+      console.log("S6Q63");
+      //// call btn - leave s4 mode
+      scene_btnMode = "nothing";
+      //// call btn color - 1 color in 4 areas. (black)
+      btnManager.scene_default("s0");
+      //// call audio - none
+
+      //// call led stripe - ??
+
+      //// call watchout video cue - S2Q23.
+      //sendWatchout("run s5");
+      //// call watchout audio cue - S2Q23.
+    },  
+  },
+  61:{
+    action: async () => {
+      console.log("S6 finished");
+      //// set all led to black.
+      btnManager.scene_reset();
+      //// go to next scene (s3)
+    },  
+  },
+};
+
+let scene7 = {
+  1: {
+    action: async () => {
+      console.log("S7Q71");
+      //// call btn color - random 6 ctn led on
+      btnManager.s7_rand_call_btn(6);
+      //// call btn - start s7 count mode
+      scene_btnMode = "s7";
+      //// call audio - none
+
+      //// call led stripe - ??
+
+      //// call watchout video cue - S2Q21.
+      //sendWatchout("run s5");
+      //// call watchout audio cue - S2Q21.
+    },
+  },
+  6: {
+    action: async () => {
+      console.log("S7Q72");
+      //// call btn color - 
+      btnManager.s7_rand_call_btn(0);
+      btnManager.scene_reset();
+      //// call btn - s6 mode
+      //scene_btnMode = "s6";
+      //// call audio - none
+
+      //// call led stripe - ??
+
+      //// call watchout video cue - S2Q22.
+      //sendWatchout("run s5");
+      //// call watchout audio cue - S2Q22.
+    },
+  },
+  11:{
+    action: async () => {
+      console.log("S7Q73");
+      //// call btn color - random 6 ctn led on
+      //// call btn - leave s4 mode
+      btnManager.s7_rand_call_btn(6);
+      //scene_btnMode = "nothing";
+      //// call audio - none
+
+      //// call led stripe - ??
+
+      //// call watchout video cue - S2Q23.
+      //sendWatchout("run s5");
+      //// call watchout audio cue - S2Q23.
+    },  
+  },
+  16:{
+    action: async () => {
+      console.log("S7Q74");
+      //// call btn - leave s4 mode
+      //scene_btnMode = "nothing";
+      //// call btn color - reset
+      btnManager.s7_rand_call_btn(0);
+      btnManager.scene_reset();
+      //// call audio - none
+
+      //// call led stripe - ??
+
+      //// call watchout video cue - S2Q23.
+      //sendWatchout("run s5");
+      //// call watchout audio cue - S2Q23.
+    },  
+  },
+  21:{
+    action: async () => {
+      console.log("S7Q74-2");
+      //// call btn - 
+      //scene_btnMode = "nothing";
+      //// call btn color - 
+      //btnManager.scene_default("s4s6");
+      //// call audio - none
+
+      //// call led stripe - ??
+
+      //// call watchout video cue - S2Q23.
+      //sendWatchout("run s5");
+      //// call watchout audio cue - S2Q23.
+    },  
+  },
+  36:{
+    action: async () => {
+      console.log("S7Q75");
+      //// call btn - 
+      //// call btn color - random 6 ctn led on
+      btnManager.s7_rand_call_btn(5);
+      //// call audio - none
+
+      //// call led stripe - ??
+
+      //// call watchout video cue - S2Q23.
+      //sendWatchout("run s5");
+      //// call watchout audio cue - S2Q23.
+    },  
+  },
+  51:{
+    action: async () => {
+      console.log("S7Q76");
+      //// call btn - leave s4 mode
+      //scene_btnMode = "nothing";
+      //// call btn color - reset
+      btnManager.s7_rand_call_btn(0);
+      btnManager.scene_reset();
+      //// call audio - none
+
+      //// call led stripe - ??
+
+      //// call watchout video cue - S2Q23.
+      //sendWatchout("run s5");
+      //// call watchout audio cue - S2Q23.
+    },  
+  },
+  66:{
+    action: async () => {
+      console.log("S7 finished, and s8 start");
+      //// call watchout video cue - S8Q81.
+      //sendWatchout("run s5");
+    },  
+  },
+  86:{
+    action: async () => {
+      console.log("S8 finished");
+      //// got preset mode
+    },
+
+  }
+};
+
 /*                                   */
 /** scene timer mode (main timeline) */
 /*                                   */
 
 async function callMode(scene, t) {
   switch (scene) {
+    case "S0":
+      if (!scene0[t]) {
+        return;
+      }
+      scene0[t].action();
+      break;
+    case "S1":
+      if (!scene1[t]) {
+        return;
+      }
+      scene1[t].action();
+      break;
     case "S2":
       if (!scene2[t]) {
         return;
@@ -363,11 +639,24 @@ async function callMode(scene, t) {
       }
       scene5[t].action();
       break;
+    case "S6":
+      if (!scene6[t]) {
+        return;
+      }
+      scene6[t].action();
+      break;
+    case "S7":
+      if (!scene7[t]) {
+        return;
+      }
+      scene7[t].action();
+      break;
   }
 }
 //// udp trigger 
-//// timer(1, "S2", 56), timer(1, "S3", 66),  timer(1, "S4", 41)
-//// timer(1, "S5", 61)
+//// timer(1, "S0", 41)
+//// timer(1, "S1", 21), timer(1, "S2", 56), timer(1, "S3", 66),  timer(1, "S4", 41)
+//// timer(1, "S5", 61), timer(1, "S6", 61), timer(1, "S7", 66)
 async function timer(state, scene, totalTime) {
   while (state) {
     await delay(1000);
@@ -1148,6 +1437,30 @@ let s5a4_counter = {
   }
 };
 
+let s6_counter = {
+  1: {
+    action: async () => {
+      console.log("s6 1 times");
+      //sendWatchout("run b4-1")
+    },
+  },
+  2: {
+    action: async () => {
+      console.log("s6 2 times");
+    },
+  },
+  3: {
+    action: async () => {
+      console.log("s6 3 times");
+    },
+  },
+  4: {
+    action: async () => {
+      console.log("s6 4 times");
+    },
+  }
+};
+
 
 //// 3. using return value to call button event cue (scene based)
 async function s2_btn_cue(counter){
@@ -1225,9 +1538,9 @@ async function s4_btn_cue(counter){
 
 async function s5_btn_cue(counter){
   let area = counter[0];
-  console.log(area);
+  //console.log(area);
   let all_area_counter = counter[1];
-  console.log(all_area_counter);
+  //console.log(all_area_counter);
   let a1_counter = all_area_counter[0];
   let a2_counter = all_area_counter[1];
   let a3_counter = all_area_counter[2];
@@ -1239,7 +1552,7 @@ async function s5_btn_cue(counter){
     //console.log(scene_5_btn_count);
     area_win = area;
   }
-  //console.log(`s2_btn_cue - area: ${area}, area_counter: ${area_counter}`);
+
   switch (scene_5_btn_count) {
     case "compete":
       if (area == 1) {
@@ -1278,9 +1591,21 @@ async function s5_btn_cue(counter){
    }
 }
 
+async function s6_btn_cue(counter){
+  if (!s6_counter[counter]) {
+    return;
+  }
+  s6_counter[counter].action();
+}
+
 //// 2.pass btn value (x,y)to "btnManager" to do computation and return value.
 function btnMode(x, y) {
   switch(scene_btnMode){
+    case "s0" :
+      let counter0 = btnManager.s0_count_mode(x,y);
+      console.log(`process - counter0: ${counter0}`);
+      //s1_btn_cue(counter0);
+      break;
     case "s2" :
       let counter = btnManager.s2_count_mode(x,y);
       //console.log(`process - counter: ${counter}`);
@@ -1294,13 +1619,23 @@ function btnMode(x, y) {
     case "s4" :
       let counter_s4 = btnManager.s4_count_mode(x,y);
       //console.log(`process - counter_s7: ${counter_s7}`);
-      s4_btn_cue(counter_s4 -1);
-      break; 
+      s4_btn_cue(counter_s4);
+      break;
     case "s5" :
       let counter_s5 = btnManager.s5_count_mode(x,y);
-      console.log(`process - counter_s5: ${counter_s5}`);
+      //console.log(`process - counter_s5: ${counter_s5}`);
       s5_btn_cue(counter_s5);
-      break;  
+      break;
+    case "s6" :
+      let counter_s6 = btnManager.s6_count_mode(x,y);
+      //console.log(`process - counter_s6: ${counter_s6}`);
+      s6_btn_cue(counter_s6);
+      break; 
+    case "s7" :
+      let counter_s7 = btnManager.s7_count_mode(x,y);
+      console.log(`process - counter_s7: ${counter_s7}`);
+      //s7_btn_cue(counter_s7);
+      break; 
     case "nothing" :
       break;       
   }
@@ -1330,8 +1665,10 @@ server.on("listening", function () {
 server.on("message", function (message, remote) {
   console.log(remote.address + ":" + remote.port + " - " + message);
   //// udp receive from watchout says "S5", then trigger timer
-  if (message == "Ss1") {
-    timer(1, "Ss1", 60); //// 3rd value is scene totalTime
+  if (message == "S0") {
+    timer(1, "S0", 41); //// 3rd value is scene totalTime
+  }else if(message == "S1"){
+    timer(1, "S1", 21); //// 3rd value is scene totalTime
   }else if(message == "S2"){
     timer(1, "S2", 56); //// 3rd value is scene totalTime
   }else if(message == "S3"){
@@ -1340,6 +1677,10 @@ server.on("message", function (message, remote) {
     timer(1, "S4", 41); //// 3rd value is scene totalTime
   }else if(message == "S5"){
     timer(1, "S5", 61); //// 3rd value is scene totalTime
+  }else if(message == "S6"){
+    timer(1, "S6", 61); //// 3rd value is scene totalTime
+  }else if(message == "S7"){
+    timer(1, "S7", 66); //// 3rd value is scene totalTime
   }
 });
 server.bind(serverPORT, serverHOST);
