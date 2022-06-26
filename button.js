@@ -14,15 +14,20 @@ let xyPos = [
 
 
 class Button {
-    constructor(pos, color, count = 0, area) {
+    constructor(pos, color, count = 0, area, brightness ) {
         this.pos = pos;
         this.color = color;
         this.count = count;
         this.area = area;
+        this.brightness = brightness;
     }
 
     ledOn() {
         ledController.brightnessOne(this.pos+1, this.color);
+    }
+
+    ledSetBrightness(){
+        ledController.set_brightness(this.pos, this.color, this.brightness)
     }
 
     ledReset() {
@@ -96,24 +101,29 @@ class Buttons {
         return randomPos;
     }
 
+
     set defaultMode(m){
         if(m == "s2"){
             for(var i=0 ; i <=5; i++){
+                // this.buttons[i].lightMode = "notBreath";
                 this.buttons[i].color = '0x4b9600'; //// brown
                 this.buttons[i].count = 0;
                 this.buttons[i].ledOn();
             }
             for(var i=6 ; i <=11; i++){
+                // this.buttons[i].lightMode = "notBreath";
                 this.buttons[i].color = '0xfcdb03'; //// yellow
                 this.buttons[i].count = 0;
                 this.buttons[i].ledOn();
             }
             for(var i=12 ; i <=17; i++){
+                // this.buttons[i].lightMode = "notBreath";
                 this.buttons[i].color = '0xffffff'; //// white
                 this.buttons[i].count = 0;
                 this.buttons[i].ledOn();
             }
             for(var i=18 ; i <=23; i++){
+                // this.buttons[i].lightMode = "notBreath";
                 this.buttons[i].color = '0x035afc'; //// blue
                 this.buttons[i].count = 0;
                 this.buttons[i].ledOn();
@@ -172,16 +182,18 @@ class Buttons {
     set endingMode(m){
         if(m == "s2"){
             for(var i=0 ; i <=23; i++){
+                //this.buttons[i].lightMode = "breath";
                 this.buttons[i].color = '0x035afc'; //// blue
-                this.buttons[i].ledOn();
+                this.buttons[i].brightness = 20;
+                this.buttons[i].ledSetBrightness();
                 this.buttons[i].count = 0;
             } 
         } else if(m == "s3q33"){
             for(var i=0 ; i <=23; i++){
-                this.buttons[i].color = '0xf0000f'; //// random color
+                this.buttons[i].color = '0x660066'; //// wrong color, should be rainbow color.
                 this.buttons[i].ledOn();
                 this.buttons[i].count = 0;
-            }               
+            }                  
         } else if(m == "s3q34"){
             for(var i=0 ; i <=23; i++){
                 this.buttons[i].color = '0x666666'; //// white 60%
@@ -226,6 +238,7 @@ class Buttons {
             } 
         }
     }
+
 }
 
 module.exports = {

@@ -9,7 +9,7 @@ btnManager.init();
 //// udp
 const dgram = require("dgram");
 var serverPORT = 9090; //// pi's port 9090
-var serverHOST = "192.168.168.45"; //// pi's ip 10.1.8.241 //// local ip is 192.168.168.45
+var serverHOST = "192.168.168.56"; //// pi's ip 10.1.8.241 //// local ip is 192.168.168.45
 var clientPORT = 3040; //// watchout production's port is 3040
 var clientHOST = "10.1.8.239"; //watchout's ip 10.1.8.239 ////
 
@@ -20,6 +20,9 @@ let scene_btnMode; //// for change btn count mode
 //// vvvv for s5
 let scene_5_btn_count = "compete"; //// if "compete" then go to trigger watchout's video (indicator)
 let area_win = 0; //// area to win
+
+//test sound
+const sound = require("./sound");
 
 
 const delay = (interval) => {
@@ -39,7 +42,7 @@ let scene0 = {
       //// call btn - no action
       //btnManager.scene_reset();
       //// call btn color - big and small flash
-      btnManager.s0_flash(60000);
+      btnManager.s0_flash(32000);
       //await delay(3000);
       //// call audio - none
 
@@ -72,6 +75,7 @@ let scene0 = {
       console.log("S0Q3");
       //// call btn - no action
       //// call btn color - set all black and count = 0.
+      btnManager.s0_force_FlashOff();
       //btnManager.scene_reset();
       //// call audio - none
 
@@ -85,6 +89,8 @@ let scene0 = {
   41:{
     action: async () => {
       console.log("S0 finished");
+      scene_btnMode = "nothing";
+      btnManager.scene_reset();
       //// go to next scene (s2)
     },  
   },
@@ -120,6 +126,7 @@ let scene2 = {
       console.log("S2Q21");
       //// call btn - no action
       //// call btn color - 4 colors in 4 areas, 1 color for 6 btns.
+      //btnManager.sceneInit();
       btnManager.scene_default("s2");
       //// call audio - none
 
@@ -133,9 +140,27 @@ let scene2 = {
   6: {
     action: async () => {
       console.log("S2Q22");
-      //// call btn - s2 mode
-      //// call btn color - 
+      //// call btn - enter s2 btn mode
       scene_btnMode = "s2";
+      //// call btn color - same as last cue.
+      // btnManager.scene_ending("s2");
+      //// call audio - none
+
+      //// call led stripe - ??
+
+      //// call watchout video cue - S2Q22.
+      //sendWatchout("run s5");
+      //// call watchout audio cue - S2Q22.
+    },
+  },
+  11: {
+    action: async () => {
+      console.log("test");
+      //// call btn - enter s2 btn mode
+      //scene_btnMode = "s2";
+      //// call btn color - same as last cue.
+      // btnManager.stop_breathing();
+      // btnManager.scene_default("s2");
       //// call audio - none
 
       //// call led stripe - ??
@@ -148,9 +173,10 @@ let scene2 = {
   36:{
     action: async () => {
       console.log("S2Q23");
-      //// call btn - leave s2 mode
+      //// call btn - leave s2 btn mode
       scene_btnMode = "nothing";
-      //// call btn color - 1 color in 4 areas.
+      //// call btn color - 1 color in 4 areas. (blue + breath)
+      //btnManager.sceneInit();
       btnManager.scene_ending("s2");
       //// call audio - none
 
@@ -161,11 +187,20 @@ let scene2 = {
       //// call watchout audio cue - S2Q23.
     },  
   },
+  55:{
+    action: async () => {
+      //console.log("S2 reset cue");
+      //// set all breath led to black and reset led.
+      //btnManager.sceneInit();
+      //btnManager.scene_default("s2");
+      //// go to next scene (s3)
+    },  
+  },
   56:{
     action: async () => {
       console.log("S2 finished");
-      //// set all led to black.
-      btnManager.scene_reset();
+      //// set all breath led to black and reset led.
+      //btnManager.scene_reset_for_ledBreath();
       //// go to next scene (s3)
     },  
   },
@@ -175,8 +210,10 @@ let scene3 = {
   1: {
     action: async () => {
       console.log("S3Q31");
+      btnManager.scene_reset();
       //// call btn - no action
       //// call btn color - 4 colors in 4 areas, 1 color for 6 btns.
+      //btnManager.sceneInit();
       btnManager.scene_default("s3");
       //// call audio - none
 
@@ -190,9 +227,10 @@ let scene3 = {
   11: {
     action: async () => {
       console.log("S3Q32");
-      //// call btn - s2 mode
-      //// call btn color - 
+      //// call btn - enter s3 btn mode
       scene_btnMode = "s3";
+      //// call btn color - same as last cue.
+
       //// call audio - none
 
       //// call led stripe - ??
@@ -204,10 +242,11 @@ let scene3 = {
   },
   41:{
     action: async () => {
-      console.log("S2Q33");
+      console.log("S3Q33");
       //// call btn - leave s3 mode
       scene_btnMode = "nothing";
-      //// call btn color - 1 color in 4 areas.
+      //// call btn color - 1 color in 4 areas. (var color breath)
+      //btnManager.sceneInit();
       btnManager.scene_ending("s3q33");
       //// call audio - none
 
@@ -220,10 +259,11 @@ let scene3 = {
   },
   51:{
     action: async () => {
-      console.log("S2Q34");
+      console.log("S3Q34");
       //// call btn - leave s2 mode
    
-      //// call btn color - 1 color in 4 areas.
+      //// call btn color - 1 color in 4 areas. (60% white no breath)
+      //btnManager.sceneInit();
       btnManager.scene_ending("s3q34");
       //// call audio - none
 
@@ -236,10 +276,11 @@ let scene3 = {
   },
   61:{
     action: async () => {
-      console.log("S2Q35");
+      console.log("S3Q35");
       //// call btn - leave s2 mode
    
-      //// call btn color - 1 color in 4 areas.
+      //// call btn color - 1 color in 4 areas.  (100% white no breath)
+      //btnManager.sceneInit();
       btnManager.scene_ending("s3q35");
       //// call audio - none
 
@@ -664,7 +705,8 @@ async function timer(state, scene, totalTime) {
     callMode(scene, currentTime);
     if (currentTime > totalTime) {
       state = 0;
-      console.log(`time up , total:${totalTime}`);
+      currentTime = 0; //// set up time back to 0
+      console.log(`times up , total: ${totalTime} secs`);
     }
   }
 }
@@ -674,6 +716,23 @@ async function timer(state, scene, totalTime) {
 /*                    */
 
 ////4. button event cue (scene based)
+let s0gs_counter = {
+  1: {
+    action: async () => {
+      console.log("s0 small button lights off");
+      //// trigger other cue
+    },
+  },
+};
+let s0gb_counter = {
+  1: {
+    action: async () => {
+      console.log("s0 big button lights off");
+      //// trigger other cue
+    },
+  }
+};
+
 let s2a1_counter = {
   1: {
     action: async () => {
@@ -1463,6 +1522,24 @@ let s6_counter = {
 
 
 //// 3. using return value to call button event cue (scene based)
+async function s0_btn_cue(counter){
+  let group = counter[0];
+  let group_counter = counter[1];
+
+  if (group == "small") {
+    if (!s0gs_counter[group_counter]) {
+      return;
+    }
+    s0gs_counter[group_counter].action();
+  }
+
+  if (group == "big") {
+    if (!s0gb_counter[group_counter]) {
+      return;
+    }
+    s0gb_counter[group_counter].action();
+  }
+}
 async function s2_btn_cue(counter){
   let area = counter[0];
   let area_counter = counter[1];
@@ -1603,8 +1680,8 @@ function btnMode(x, y) {
   switch(scene_btnMode){
     case "s0" :
       let counter0 = btnManager.s0_count_mode(x,y);
-      console.log(`process - counter0: ${counter0}`);
-      //s1_btn_cue(counter0);
+      //console.log(`process - counter0: ${counter0}`);
+      s0_btn_cue(counter0);
       break;
     case "s2" :
       let counter = btnManager.s2_count_mode(x,y);
@@ -1645,7 +1722,10 @@ process.on("message", function (args) {
   // console.log(args);
   let x = args["x"];
   let y = args["y"];
-  //console.log(`test.js get btn ${x} and ${y}`);
+  console.log(`test.js get btn ${x} and ${y}`);
+  let s = new sound.Sound();
+  // s.playAudio('/home/pi/Q22B.wav', 0);
+  s.playRandAudio(0);
   btnMode(x, y);
 });
 

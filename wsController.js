@@ -11,6 +11,15 @@ process.on('SIGINT', function () {
   process.nextTick(function () { process.exit(0); });
 });
 
+// let breathLed;
+// let lightMode;
+// let new_pos;
+// let new_color;
+
+
+
+
+
 /**
   * 使用前一定要呼叫 init
   */
@@ -27,6 +36,8 @@ class wsController {
     */
   reset() {
     ws281x.reset(NUM_LEDS);
+    //
+    //ws281x.init(NUM_LEDS);
   }
 
   /**
@@ -63,43 +74,83 @@ class wsController {
   }
 
   brightnessOne(pos, color){
-    //console.log(pos);
-    //console.log(color);
     let ledPos = pos - 1;
     pixelData[ledPos] = color;
     ws281x.render(pixelData);
-
-    // ---- animation-loop
-    // var t0 = Date.now();
-    // setInterval(function () {
-    //   var dt = Date.now() - t0;
-
-    //   ws281x.setBrightness(
-    //     Math.floor(Math.sin(dt/1000) * 128 + 128));
-    // }, 1000 / 30);
   }
 
-  /**
-    * all led on (one by one), depends on the input of hex color
-    */
-  // iterate(color) {
-  //   var color;
-  //   var offset = 0;
+
+  set_brightness(pos, color, brightness){
+    let ledPos = pos - 1;
+    pixelData[ledPos] = color;
+    ws281x.render(pixelData);
+    ws281x.setBrightness(brightness);
+  }
+
+
+  // brightnessOne(pos, color, lightMode){
+  //   //console.log(pos);
+  //   //console.log(color);
+  //   new_pos = pos;
+  //   new_color = color;
+
+  //   if(lightMode == "notBreath"){
+  //     lightMode = false;
+  //     //breathLed = new wsLed(this.ledbrightnessOne);
+  //   }else if (lightMode == "breath"){
+  //     lightMode = true;
+  //     //noBreathLed = new wsLed(this.ledbrightnessOneBreath);
+  //   }
+  //   breathLed = new wsLed(this.ledbrightnessOne);
+  // }
+
+  // ledbrightnessOne(pos, color, lightMode){
+  //   let ledPos = pos - 1;
+  //   pixelData[ledPos] = color;
+  //   ws281x.render(pixelData);
 
   //   // ---- animation-loop
-  //   setInterval(function () {
-  //       var i=NUM_LEDS;
-  //       while(i--) {
-  //           pixelData[i] = 0;
-  //       }
-  //       pixelData[offset] = color;
+  //   var t0 = Date.now();
+  //   var breath = setInterval(function () {
+  //     var dt = Date.now() - t0;
       
-  //       offset = (offset + 1) % NUM_LEDS;
-  //       ws281x.render(pixelData);
-  //     }, 100);
-
-  //   console.log('Enter iterate mode. Press <ctrl>+C to exit.');
+  //     ws281x.setBrightness(
+  //       Math.floor(Math.sin(dt/1000) * 128 + 128));
+  //   }, 1000 / 30);
+  //   if(lightMode == true){
+  //     clearInterval(breath);
+  //   }
+  //   //clearInterval(breath);
   // }
+
+
+
+
+
+  // ledbrightnessOne(pos, color){
+  //   let ledPos = pos - 1;
+  //   pixelData[ledPos] = color;
+  //   ws281x.render(pixelData);
+  // }
+
+  // ledbrightnessOneBreath(pos, color){
+  //   let ledPos = pos - 1;
+  //   pixelData[ledPos] = color;
+  //   ws281x.render(pixelData);
+
+  //   // ---- animation-loop
+  //   var t0 = Date.now();
+  //   var breath = setInterval(function () {
+  //     var dt = Date.now() - t0;
+      
+  //     ws281x.setBrightness(
+  //       Math.floor(Math.sin(dt/1000) * 128 + 128));
+  //   }, 1000 / 30);
+  //   //clearInterval(breath);
+  // }
+
+
+
 }
 
 module.exports = wsController;

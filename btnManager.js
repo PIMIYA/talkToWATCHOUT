@@ -36,20 +36,22 @@ let s6_amount = 0;
 let s7_default_xy = [];
 let s7_amount = 0;
 
-let buttonPos_s = [0,3,5,7,8,10,13,15,17,19,21,22];
-let buttonPos_b = [1,2,4,6,9,11,12,14,16,18,20,23];
-
-let bs = false;
-let ss = false;
-
-
 const delay = (interval) => {
     return new Promise((resolve) => {
       setTimeout(resolve, interval);
     });
   };
 
+//// s0 setting
+let buttonPos_s = [0,3,5,7,8,10,13,15,17,19,21,22];
+let buttonPos_b = [1,2,4,6,9,11,12,14,16,18,20,23];
+let bs = false;
+let ss = false;
+let s0_amountS = 0;
+let s0_amountB = 0;
 
+
+//// for s0 use
 function flash(bigon, bigoff, smallOn, smallOff){
     this.MaxIterations = 1000000;
     this.Enabled = true;    
@@ -61,8 +63,8 @@ function flash(bigon, bigoff, smallOn, smallOff){
             && this.iteration++ < this.MaxIterations){
                 console.log(this.iteration);
                 //do things
-                console.log('b: '+ bs);
-                console.log('s: '+ ss);
+                //console.log('b: '+ bs);
+                //console.log('s: '+ ss);
                 if(bs == false && ss ==false){
                     await delay(500);
                     smallOff();
@@ -101,6 +103,7 @@ function flash(bigon, bigoff, smallOn, smallOff){
         };
 }
 
+//// for every scenes use
 class btnManager {  
     init() {
       this.exec_btn();
@@ -119,15 +122,22 @@ class btnManager {
     scene_reset() {
         for(var i=0 ; i <=23; i++){
             buttons.allButtons[i].color = '0x000000'; //// black
-            buttons.allButtons[i].ledReset();
+            buttons.allButtons[i].ledOn();
             buttons.allButtons[i].count = 0;
         }
     }
 
+
+    sceneRestInit(mode) {
+        buttons.resetInitMode = mode;
+    }
+
+    //// for every scenes default color 
     scene_default(s) {
         buttons.defaultMode = s;
     }
 
+    //// for every scenes ending color
     scene_ending(sq) {
         buttons.endingMode = sq;
     }
@@ -150,11 +160,6 @@ class btnManager {
             buttons.allButtons[bigPos[step]].ledOn();
         }
     }
-
-
-
-    
-    
     
     s0_smallOn(){
         let smallPos = buttonPos_s;
@@ -184,10 +189,20 @@ class btnManager {
         let pos = this.xyToPos(x, y);
         if(buttonPos_s.indexOf(pos) != -1){
             ss = true;
+            s0_amountS++;
+            return ["small", s0_amountS]
+ 
         }else if(buttonPos_b.indexOf(pos) != -1){
             bs = true;
+            s0_amountB++;
+            return ["big", s0_amountB]
         }
-        console.log(`bigState: ${bs}, smallState: ${ss}`);
+        //console.log(`bigState: ${bs}, smallState: ${ss}`);
+    }
+
+    s0_force_FlashOff(){
+        ss = true;
+        bs = true;
     }
 
     s2_count_mode(x, y) {

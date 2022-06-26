@@ -1,8 +1,8 @@
 const dgram = require('dgram');
 var serverPORT = 9090;
-var serverHOST = '192.168.168.45'; //pi's ip 192.168.168.45  //// 10.1.8.241
+var serverHOST = '192.168.168.56'; //pi's ip 192.168.168.45  //// 10.1.8.241
 var clientPORT = 9090; //watchout production port is 3040
-var clientHOST = '192.168.168.45'; //watchout's ip 192.168.168.45 //// 10.1.8.241
+var clientHOST = '192.168.168.56'; //watchout's ip 192.168.168.45 //// 10.1.8.241
 
 
 // var server = dgram.createSocket('udp4');
@@ -19,7 +19,7 @@ var clientHOST = '192.168.168.45'; //watchout's ip 192.168.168.45 //// 10.1.8.24
 // server.bind(serverPORT, serverHOST)
 
 // 例子：UDP客戶端
-var message = "S0"; //S5
+var message = "S2"; //S5
 console.log(message);
 var client = dgram.createSocket('udp4');
 client.send(message, clientPORT, clientHOST, function(err, bytes) {
